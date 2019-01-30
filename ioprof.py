@@ -1333,19 +1333,19 @@ def main(argv):
 		out=""
 		(rc, out) = run_cmd(g, 'cat '+ g.fdisk_file )
 		try:
-			g.sector_size = int(regex_find("Units = sectors of \d+ \S \d+ = (\d+) bytes", out)[0])
+			g.sector_size = int(regex_find("Units:\ sectors\ of\ \d* \*\ \d*\ =\ (\d*)\ bytes", out)[0])
 		except:
-			print "ERROR: Sector Size Invalid"
+			print "ERROR: Sector Size Invalid1"
 			sys.exit()
 		try:
-			g.total_lbas  = int(regex_find(".+ total (\d+) sectors", out)[0])
+			g.total_lbas  = int(regex_find(".+\ (\d*)\ sectors", out)[0])
 		except:
-			print "ERROR: Sector Size Invalid"
+			print "ERROR: Sector Size Invalid2"
 			sys.exit()
 		try:
-			g.device      = regex_find("Disk (\S+): \S+ GB, \d+ bytes", out)[0]
+			g.device      = regex_find("Disk\ (\S+):\ \S+\ GiB", out)[0]
 		except:
-			print "ERROR: Sector Size Invalid"
+			print "ERROR: Sector Size Invalid3"
 			sys.exit()
 		verbose_print(g, "dev="+ g.device + " lbas=" + str(g.total_lbas) + " sec_size=" + str(g.sector_size))
 
