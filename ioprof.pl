@@ -1974,10 +1974,11 @@ if ($mode eq "post")
 	{
 		die("ERROR: Could not find fdisk file $fdisk_file.  Please verify the .tar wasn't renamed");
 	}
-        $sector_size=`cat $fdisk_file | grep 'Units'| awk '{ print \$9 }'`;
-	my $lba_line = `cat $fdisk_file | grep "sectors\$"`;
-	print "$lba_line\n" if ($DEBUG);
-	if ($lba_line =~ /(\d+) sectors$/) { $total_lbas=$1; }
+        $sector_size=`cat $fdisk_file | grep 'Units'| awk '{ print \$8 }'`;
+	#my $lba_line = `cat $fdisk_file | grep "sectors\$"`;
+        my $total_lbas = `cat $fdisk_file | grep "sectors" | head -n1 | awk '{print \$7}'`;
+	#print "$lba_line\n" if ($DEBUG);
+	#if ($lba_line =~ /(\d+) sectors$/) { $total_lbas=$1; }
         $dev = `cat $fdisk_file | grep Disk | awk '{ print \$2 }'| head -1 | tr ':' ' '`;
         chomp($dev);
         chomp($total_lbas);
