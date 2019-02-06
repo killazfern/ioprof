@@ -19,7 +19,7 @@
 my $VERSION = '2.0.4';
 print "$0 ($VERSION)\n";
 
-my $VERBOSE         = 0;
+my $VERBOSE         = 1;
 my $DEBUG           = 0;
 my $FASTFILE        = 1;
 my $SINGLE_THREADED = 0;
@@ -565,7 +565,6 @@ sub block_ranges
         {
                 die("ERROR: $mounttype is not supported yet");
         }
-
         printout($file);
 }
 
@@ -576,7 +575,7 @@ sub find_all_files
         `rm -f filetrace.*`;
         my $cpu_count = `cat /proc/cpuinfo | grep processor | wc -l`;
 
-        $mountpoint = `mount | grep $dev | awk '{ print \$3 }'`;
+        $mountpoint = `mount | grep $dev | grep -v efi | awk '{ print \$3 }' | awk NF=NF RS= OFS=" "`;
         if ($? != 0 )
         {
                 print "$dev not mounted\n";
@@ -584,7 +583,7 @@ sub find_all_files
         }
         chomp($mountpoint);
         print "\nmountpoint: $mountpoint\n" if ($VERBOSE);
-        $mounttype = `mount | grep $dev | awk '{ print \$5 }'`;
+        $mounttype = `mount | grep $dev | grep -v efi | awk '{ print \$5 }'`;
         chomp($mounttype);
         print "mounttype: $mounttype\n" if ($VERBOSE);
 
@@ -606,7 +605,7 @@ sub find_all_files
 
         my $file_count = scalar(@FILES);
         print "filecount=$file_count\n" if($VERBOSE);
-        print @FILES if($DEBUG);
+        #print @FILES if($DEBUG);
 
         my $set_count = int($file_count / $cpu_count) + 1;
         print "set_count=$set_count\n" if ($DEBUG);
@@ -635,7 +634,6 @@ sub find_all_files
 	}
 	else
 	{
-
         	for(0 .. ($cpu_count-1))
         	{
                 	$cpu_affinity = $_ % $cpu_count;
